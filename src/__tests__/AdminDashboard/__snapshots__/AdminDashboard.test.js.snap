@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`It should render dashboard component should render admin dashboard 1`] = `ShallowWrapper {}`;
+
+exports[`It should render login component should render login 1`] = `ShallowWrapper {}`;

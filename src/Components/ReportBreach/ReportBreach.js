@@ -15,10 +15,10 @@ export class ReportBreach extends Component {
             selectedFranchisee: '',
             selectedBusinessArea: '',
             selectedWho: '',
-            reporteeName:'',
-            reporteeEmailId:'',
-            whenBankAware:'',
-            whenReported:''
+            reporteeName: '',
+            reporteeEmailId: '',
+            whenBankAware: '',
+            whenReported: ''
 
 
         };
@@ -26,6 +26,7 @@ export class ReportBreach extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onFranchiseeChange = this.onFranchiseeChange.bind(this);
         this.onBusinessAreaChange = this.onBusinessAreaChange.bind(this);
+        this.onBreachCategoryChange = this.onBreachCategoryChange.bind(this);
         this.onWhoChange = this.onWhoChange.bind(this);
     }
     componentDidMount() {
@@ -61,20 +62,35 @@ export class ReportBreach extends Component {
             })
     }
     onFranchiseeChange(e) {
-        console.log("event traget", e.target.value)
+        console.log("event traget:", e.target.value)
+        console.log("franchisee value",this.state.franchisee[e.target.value-1].name)
+        this.setState({
+            selectedFranchisee: this.state.franchisee[e.target.value-1].name
+        })
         this.getBusinessArea(e.target.value)
     }
     onBusinessAreaChange(e) {
-       
+        console.log("businessarea", e.target.value)
+        this.setState({ selectedBusinessArea:  this.state.businessArea[e.target.value-1].name}, () => {
+            //console.log(this.state)
+        });
+
+    }
+    onBreachCategoryChange(e) {
+        console.log("breachcategory", e.target.value)
+        this.setState({ selectedBreachCategory:  this.state.breachCategory[e.target.value-1].name}, () => {
+            //console.log(this.state)
+        });
+
     }
     getBusinessArea(franchisee) {
         console.log("Inside get business", franchisee)
-        axios.get(`${url.jsonServerUrl}/businessArea/${franchisee}`)
+        axios.get(`${url.jsonServerUrl}/bussinessarea/${franchisee}`)
             .then(res => {
 
-                console.log("res inside get business Area", res.data.data)
+                console.log("res inside get business Area", res.data)
                 this.setState({
-                    businessArea: res.data.data
+                    businessArea: res.data
                 });
             })
     }
@@ -85,31 +101,38 @@ export class ReportBreach extends Component {
 
     }
     handleSubmit(e) {
-        let url = 'http://10.117.189.248:8095/bank'
+
         e.preventDefault()
         let isValid = this.validate();
         console.log("isvalid inside validate submit", isValid)
         if (isValid) {
-            const accountHolder = {
-                email_id: this.state.email,
-                first_name: this.state.firstName,
-                last_name: this.state.lastName,
-                mobile_no: this.state.mobileNo,
-                password: this.state.password
+            const report = {
+                franchise: this.state.selectedFranchisee,
+                bussinessArea: this.state.selectedBusinessArea,
+                breachCategory: this.state.selectedBreachCategory,
+                reporteeName: '',
+                reporteeEmailId: '',
+                whenBankAware: this.state.whenBankAware,
+                whenReported: this.state.whenReported,
+                companyName: '',
+                reportingChannel: '',
+                compromiseType: '',
+                creditCardNumber: '',
+                debitCardNumber: '',
+                cardHolderName: '',
+                cardHolerAge: '',
+                contactNo: '',
+                reason: '',
+
             };
-            console.log(accountHolder)
-            axios.post(`${url}/register`, { accountHolder })
+            console.log("report fields", report)
+            axios.post(`${url.url}/breach`, report)
                 .then(res => {
-                    if (res.status === 200) {
-                        alert("Registration is successful")
-                        this.props.history.push({
-                            pathname: '/confirmation',
-                            search: '?query=confirmation',
-                            //state:{data: response.data}
-                            state: { acc_no: res.data.acc_no }
-                        })
+                    if (res.status === 201) {
+                        alert(`Breach submitted successfully..Ticket number is ${res.data.ticketNumber}`)
+                        
                     } else {
-                        console.log(res.status)
+                        alert("Error in submitting breach")
                     }
                 }).catch((err) => {
                     alert("Error in registration", err)
@@ -121,38 +144,9 @@ export class ReportBreach extends Component {
         console.log("Inside validate")
         let isValid = true;
         const errors = {
-            emailError: '',
-            mobileNoError: '',
-            passwordError: '',
-            firstNameError: '',
-            lastNameError: ''
+            franchiseeError:''
         }
-        if (this.state.email.indexOf('@') != -1) {
-            if (this.state.firstName.length > 4) {
-                if (this.state.lastName.length > 4) {
-                    if (this.state.mobileNo.length === 10) {
-                        isValid = true;
-                    } else {
-                        isValid = false;
-                        errors.mobileNoError = 'Mobile Number should be 10 digits and should be a number'
-                    }
-                } else {
-                    isValid = false;
-                    errors.lastNameError = 'Last name should be more than 4 characters'
-                }
-            } else {
-                isValid = false;
-                errors.firstNameError = 'first name should be more than 4 characters'
-            }
-        } else {
-            console.log("is valid is false")
-            isValid = false;
-            errors.emailError = "Email should have @ and password should have more than 4 characters"
-        }
-
-
-
-
+        
         this.setState({
             ...this.state,
             ...errors
@@ -169,7 +163,7 @@ export class ReportBreach extends Component {
         }, this);
         let businessAreaList = this.state.businessArea.map((item, i) => {
             return (
-                <option key={i} value={item.value} >{item.name}</option>
+                <option key={i} value={item.value}>{item.name}</option>
             )
         }, this);
         let breachCategoryList = this.state.breachCategory.map((item, i) => {
@@ -191,63 +185,56 @@ export class ReportBreach extends Component {
                         {franchiseeList}
                     </select><br></br>
                     <label htmlFor="BusinessArea">Your business area </label><br></br>
-                    <select className="form-control"  >
-                        <option>select</option>
+                    <select className="form-control" onChange={this.onBusinessAreaChange} >
+                        <option >select</option>
                         {businessAreaList}
                     </select><br></br>
 
                     <label htmlFor="who">Select the category of breach </label><br></br>
-                    <select className="form-control" onChange={this.handleChange} >
+                    <select className="form-control" onChange={this.onBreachCategoryChange} >
                         <option>select</option>
                         {breachCategoryList}
                     </select><br></br>
 
-                    <label htmlFor="who">Who reported the issue </label><br></br>
-                    <select className="form-control" onChange={this.onWhoChange} >
-                        <option>select</option>
-                        <option>I</option>
-                        <option>Colleague</option>
-                        <option>Company</option>
-                    </select><br></br>
-                  
+
                     <div className="form-group col-xs-3">
-                                    <label htmlFor="name">When did bank come to know of the breach?</label>
-                                    <br></br>
-                                    <input name=""
-                                        className="form-control"
-                                        type="date"
-                                        id="whenBankAware"
-                                        value={this.state.whenBankAware}
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
-                                <div className="form-group col-xs-3">
-                                    <label htmlFor="whenReported">When was the issue reported ?</label>
-                                    <br></br>
-                                    <input name=""
-                                        className="form-control"
-                                        type="date"
-                                        id="whenReported"
-                                        value={this.state.whenReported}
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
-                                <div className="form-group col-xs-3">
-                                    <label htmlFor="reportingChannel">Reporting Channel</label>
-                                    <br></br>
-                                    <select 
-                                        className="form-control"
-                                        id="reportingChannel"
-                                        value={this.state.reportingChannel}
-                                        onChange={this.handleChange}
-                                    >
-                                        <option key="1">select</option>
-                                        <option key="2">Online</option>
-                                        <option key="3">Offline</option>
-                                    </select>
-                                </div>
-                                <br></br>
-                    <button type="submit" id="registerfreesubmit" className="btn btn-primary" onClick={this.handleSubmit}  >Report the breach</button>
+                        <label htmlFor="name">When did bank come to know of the breach?</label>
+                        <br></br>
+                        <input name=""
+                            className="form-control"
+                            type="date"
+                            id="whenBankAware"
+                            value={this.state.whenBankAware}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="form-group col-xs-3">
+                        <label htmlFor="whenReported">When was the issue reported ?</label>
+                        <br></br>
+                        <input name=""
+                            className="form-control"
+                            type="date"
+                            id="whenReported"
+                            value={this.state.whenReported}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="form-group col-xs-3">
+                        <label htmlFor="reportingChannel">Reporting Channel</label>
+                        <br></br>
+                        <select
+                            className="form-control"
+                            id="reportingChannel"
+                            value={this.state.reportingChannel}
+                            onChange={this.handleChange}
+                        >
+                            <option key="1">select</option>
+                            <option key="2">Online</option>
+                            <option key="3">Offline</option>
+                        </select>
+                    </div>
+                    <br></br>
+                    <button type="submit" id="submit" className="btn btn-primary" onClick={this.handleSubmit}  >Report the breach</button>
 
                 </form>
             </div>

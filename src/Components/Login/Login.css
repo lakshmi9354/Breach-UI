@@ -1,0 +1,9 @@
+h1{
+    color: blue
+}
+.loginform{
+    position: relative;
+    top:20%;
+    left:30%;
+    width: 40%;
+}

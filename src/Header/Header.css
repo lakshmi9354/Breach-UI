@@ -4,8 +4,12 @@
     width:100%;
     text-align: left;
     box-sizing: border-box;
-    background-color: blue;
+    background-color: orange;
     color: white;
+}
+.heading{
+    color: white;
+    border-left:30%;
 }
 /* body{
     background: url('../../Assets/Images/background.jpg') no-repeat ;
@@ -20,6 +24,7 @@
 .INGLogo{
     height : 100%;
     float: left;
+    width: 40%;
 }
 
 

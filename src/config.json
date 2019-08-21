@@ -1,3 +1,4 @@
 {
-    "jsonServerUrl" : "http://localhost:3001"
+    "jsonServerUrl" : "http://13.235.100.163:9900/breach/api",
+    "url": "http://13.235.100.163:9900/breach/api"
 }

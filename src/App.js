@@ -4,15 +4,19 @@ import './App.css';
 import { HashRouter, Switch, Route } from 'react-router-dom'
 import ReportBreach from './Components/ReportBreach/ReportBreach';
 import Header from './Header/Header';
+import AdminDashboard from './Components/AdminDashboard/AdminDashboard';
+import Login from './Components/Login/Login';
 
 function App() {
   return (
     <div className="App">
       <Header/>
       <HashRouter>
-        <switch>
+        <Switch>
         <Route path='/reportbreach' exact component={ReportBreach}></Route>
-        </switch>
+        <Route path='/admindashboard' exact component={AdminDashboard}></Route>
+        <Route path='/login' exact component={Login}></Route>
+        </Switch>
          
       </HashRouter>
     </div>

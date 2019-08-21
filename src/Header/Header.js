@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import INGlogo from '../Assets/Images/Logo.jfif'
+import INGlogo from '../Assets/Images/Logo.png'
 import './Header.css'
 
 export class Header extends React.Component {
@@ -10,7 +10,6 @@ export class Header extends React.Component {
         }
         
     }
-
  render() {
         return (
             <div>
@@ -18,12 +17,14 @@ export class Header extends React.Component {
                     this.props.loggedIn ? (
                         <div className="header">
                             <img className="INGLogo" src={INGlogo} alt="ING Logo" />
+                            <h2 className="heading">    Breach Reporting System</h2>
                             {/* <a className="login" href="/#/logout">Logout</a> */}
                         </div>
                     ) :
                         (
                             <div className="header">
                                 <img className="INGLogo" src={INGlogo} alt="ING Logo" />
+                                <h2 className="heading">Breach Reporting System</h2>
                                 {/* <a className="login" href="/#/login">Login</a> */}
                             </div>
                         )

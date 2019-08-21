@@ -1,0 +1,38 @@
+.txnheading{
+    text-align: left;
+}
+.tableheading{
+    background-color: blue;
+    color: white
+}
+.datarow{
+    text-align: left
+}
+.breachtable{
+    margin-left: 20%;
+}
+table tr th {
+    border: solid 1px black;
+}
+table td{
+    border: solid 1px black;
+}
+.tab{
+    float:left;
+}
+.logout{
+    margin-top: 0;
+    float: right;
+}
+.historyheading{
+    top:200px;
+    float:center;
+}
+.butTrue{
+    background-color: red;
+    color: white;
+}
+.butFalse{
+    background-color: green;
+    color: white;
+}

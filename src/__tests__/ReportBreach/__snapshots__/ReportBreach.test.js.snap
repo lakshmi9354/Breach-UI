@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`It should render login component should render report breach 1`] = `ShallowWrapper {}`;
